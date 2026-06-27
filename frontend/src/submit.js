@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useStore } from './store';
 import { ResultDialog } from './components/ResultDialog';
+import { spawnRipple } from './lib/ripple';
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8000';
 
@@ -44,6 +45,7 @@ export const SubmitButton = () => {
         type="button"
         className="btn btn--primary"
         onClick={handleSubmit}
+        onMouseDown={spawnRipple}
         disabled={status === 'loading'}
       >
         {status === 'loading' ? 'Submitting…' : 'Submit Pipeline'}

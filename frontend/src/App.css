@@ -170,6 +170,8 @@
 /* Buttons ----------------------------------------------------------------- */
 
 .btn {
+  position: relative;
+  overflow: hidden;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: 8px 16px;
@@ -178,6 +180,28 @@
   cursor: pointer;
   transition: transform 0.12s var(--ease), background 0.15s var(--ease),
     border-color 0.15s var(--ease), box-shadow 0.2s var(--ease), opacity 0.15s;
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-1px) scale(1.015);
+}
+
+.btn:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Ripple spawned on click, see lib/ripple.js. */
+.btn__ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  animation: btn-ripple 0.55s var(--ease) forwards;
+  pointer-events: none;
+}
+
+.btn--ghost .btn__ripple {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .btn:disabled {
@@ -193,12 +217,12 @@
 }
 
 .btn--primary:not(:disabled):hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.015);
   box-shadow: 0 6px 20px var(--brand-glow);
 }
 
 .btn--primary:not(:disabled):active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
 }
 
 .btn--ghost {
@@ -222,4 +246,8 @@
 @keyframes mesh-drift {
   0% { background-position: 0% 0%, 100% 100%, 50% 0%; }
   100% { background-position: 12% 8%, 88% 92%, 58% 6%; }
+}
+
+@keyframes btn-ripple {
+  to { transform: scale(1); opacity: 0; }
 }

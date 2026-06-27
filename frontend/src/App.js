@@ -5,6 +5,8 @@ import { SubmitButton } from './submit';
 import { StatusPill } from './components/StatusPill';
 import { ValidationProvider } from './lib/ValidationContext';
 import { useStore } from './store';
+import { useCountUp } from './lib/useCountUp';
+import { spawnRipple } from './lib/ripple';
 import './App.css';
 
 const statsSelector = (state) => ({
@@ -18,6 +20,8 @@ function App() {
     statsSelector,
     shallow
   );
+  const animatedNodeCount = useCountUp(nodeCount);
+  const animatedEdgeCount = useCountUp(edgeCount);
 
   return (
     <ValidationProvider>
@@ -43,13 +47,14 @@ function App() {
           <div className="app__actions">
             <StatusPill />
             <span className="app__stats">
-              {nodeCount} {nodeCount === 1 ? 'node' : 'nodes'} · {edgeCount}{' '}
-              {edgeCount === 1 ? 'edge' : 'edges'}
+              {animatedNodeCount} {nodeCount === 1 ? 'node' : 'nodes'} ·{' '}
+              {animatedEdgeCount} {edgeCount === 1 ? 'edge' : 'edges'}
             </span>
             <button
               type="button"
               className="btn btn--ghost"
               onClick={clearPipeline}
+              onMouseDown={spawnRipple}
               disabled={nodeCount === 0}
             >
               Clear
