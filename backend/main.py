@@ -34,15 +34,21 @@ class ParseResult(BaseModel):
     num_nodes: int
     num_edges: int
     is_dag: bool
+    # Topological run order (empty when the pipeline has a cycle).
+    execution_order: list[str] = []
+    # Nodes left in a cycle (empty when the pipeline is a DAG).
+    cycle_nodes: list[str] = []
 
 
-def is_dag(nodes: list[Node], edges: list[Edge]) -> bool:
-    """Return True if the graph is acyclic, using Kahn's algorithm.
+def analyze(nodes: list[Node], edges: list[Edge]) -> tuple[bool, list[str], list[str]]:
+    """Kahn's algorithm: returns (is_dag, execution_order, cycle_nodes).
 
-    Edges that reference unknown nodes are ignored so a malformed payload can't
-    make a valid pipeline look cyclic.
+    Node ids keep their input order so the execution order is stable. Edges that
+    reference unknown nodes are ignored so a malformed payload can't make a valid
+    pipeline look cyclic.
     """
-    ids = {node.id for node in nodes}
+    order = [node.id for node in nodes]
+    ids = set(order)
     adjacency = {node_id: [] for node_id in ids}
     indegree = {node_id: 0 for node_id in ids}
 
@@ -51,19 +57,21 @@ def is_dag(nodes: list[Node], edges: list[Edge]) -> bool:
             adjacency[edge.source].append(edge.target)
             indegree[edge.target] += 1
 
-    queue = deque(node_id for node_id in ids if indegree[node_id] == 0)
-    visited = 0
+    queue = deque(node_id for node_id in order if indegree[node_id] == 0)
+    execution_order: list[str] = []
 
     while queue:
         node_id = queue.popleft()
-        visited += 1
+        execution_order.append(node_id)
         for neighbor in adjacency[node_id]:
             indegree[neighbor] -= 1
             if indegree[neighbor] == 0:
                 queue.append(neighbor)
 
-    # If every node was processed, no cycle remained.
-    return visited == len(ids)
+    is_dag = len(execution_order) == len(ids)
+    cycle_nodes = [node_id for node_id in order if node_id not in set(execution_order)]
+
+    return is_dag, (execution_order if is_dag else []), cycle_nodes
 
 
 @app.get("/")
@@ -73,8 +81,11 @@ def read_root():
 
 @app.post("/pipelines/parse", response_model=ParseResult)
 def parse_pipeline(pipeline: Pipeline) -> ParseResult:
+    is_dag, execution_order, cycle_nodes = analyze(pipeline.nodes, pipeline.edges)
     return ParseResult(
         num_nodes=len(pipeline.nodes),
         num_edges=len(pipeline.edges),
-        is_dag=is_dag(pipeline.nodes, pipeline.edges),
+        is_dag=is_dag,
+        execution_order=execution_order,
+        cycle_nodes=cycle_nodes,
     )

@@ -54,6 +54,33 @@ export const ResultDialog = ({ status, result, onClose }) => {
                 ? 'This pipeline is a valid DAG — no cycles detected.'
                 : 'This pipeline is not a DAG — it contains a cycle.'}
             </div>
+
+            {result.is_dag && result.execution_order?.length > 0 && (
+              <div className="dialog__section">
+                <span className="dialog__section-title">Execution order</span>
+                <div className="dialog__chips">
+                  {result.execution_order.map((id, i) => (
+                    <span key={id} className="chip">
+                      <span className="chip__index">{i + 1}</span>
+                      {id}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!result.is_dag && result.cycle_nodes?.length > 0 && (
+              <div className="dialog__section">
+                <span className="dialog__section-title">Nodes in the cycle</span>
+                <div className="dialog__chips">
+                  {result.cycle_nodes.map((id) => (
+                    <span key={id} className="chip chip--danger">
+                      {id}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
 
