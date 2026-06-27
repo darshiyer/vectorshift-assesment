@@ -8,18 +8,20 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: rgba(16, 24, 40, 0.45);
+  background: rgba(4, 6, 10, 0.66);
+  backdrop-filter: blur(4px);
   animation: overlay-in 0.15s ease;
 }
 
 .dialog {
   width: 100%;
   max-width: 380px;
-  background: var(--bg-surface);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: var(--space-5);
-  animation: dialog-in 0.18s ease;
+  animation: dialog-in 0.2s var(--ease);
 }
 
 .dialog__title {

@@ -79,9 +79,16 @@ export const PipelineUI = () => {
         connectionLineType="smoothstep"
         fitView
       >
-        <Background color="var(--border-strong)" gap={gridSize} />
+        <Background color="#222a3d" gap={gridSize} size={1.5} />
         <Controls />
-        <MiniMap pannable zoomable />
+        <MiniMap
+          pannable
+          zoomable
+          maskColor="rgba(8, 10, 15, 0.7)"
+          nodeColor="#5560f0"
+          nodeStrokeColor="#6d78ff"
+          style={{ backgroundColor: '#11141d' }}
+        />
       </ReactFlow>
 
       {nodes.length === 0 && (

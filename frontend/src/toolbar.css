@@ -1,24 +1,25 @@
-/* toolbar.css — the node palette sidebar. */
+/* toolbar.css — the node palette sidebar (dark). */
 
 .toolbar {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  width: 240px;
+  width: 248px;
   flex-shrink: 0;
-  padding: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-5);
   background: var(--bg-surface);
   border-right: 1px solid var(--border);
   overflow-y: auto;
 }
 
 .toolbar__heading {
-  margin: 0 0 var(--space-2);
-  font-size: 11px;
+  margin: 0 0 var(--space-3);
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .toolbar__nodes {
@@ -32,20 +33,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   padding: var(--space-3) var(--space-2);
-  background: var(--bg-surface);
+  background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   cursor: grab;
   user-select: none;
   text-align: center;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease),
+    transform 0.12s var(--ease), background 0.16s var(--ease);
 }
 
 .palette-node:hover {
   border-color: var(--brand-500);
-  box-shadow: var(--shadow-sm);
+  background: var(--bg-muted);
+  box-shadow: 0 6px 18px -8px var(--brand-glow);
+  transform: translateY(-2px);
 }
 
 .palette-node:active {
@@ -57,16 +61,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--radius-sm);
   background: var(--brand-soft);
-  color: var(--brand-600);
-  font-size: 14px;
+  color: var(--brand-400);
+  font-size: 15px;
+  transition: transform 0.16s var(--ease);
+}
+
+.palette-node:hover .palette-node__icon {
+  transform: scale(1.08);
 }
 
 .palette-node__label {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-base);
+}
+
+.palette-node:hover .palette-node__label {
+  color: var(--text-strong);
 }

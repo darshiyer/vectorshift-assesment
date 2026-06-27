@@ -1,25 +1,32 @@
-/* BaseNode.css — shared look for every node type. */
+/* BaseNode.css — shared look for every node type (dark). */
+
+.react-flow__node {
+  animation: node-in 0.22s var(--ease);
+}
 
 .node {
   position: relative;
   min-width: 220px;
   max-width: 320px;
-  background: var(--bg-surface);
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg-surface));
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   font-size: 13px;
   color: var(--text-base);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 
 .node:hover {
-  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
 }
 
 .react-flow__node.selected .node {
-  border-color: var(--brand-500);
-  box-shadow: 0 0 0 2px var(--brand-soft), var(--shadow-md);
+  border-color: var(--accent, var(--brand-500));
+  box-shadow: 0 0 0 1px var(--accent, var(--brand-500)),
+    0 0 24px -6px var(--accent, var(--brand-glow)), var(--shadow-md);
 }
 
 /* Category accent bar across the top of each node. */
@@ -27,9 +34,10 @@
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
-  height: 3px;
+  height: 2px;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   background: var(--accent, var(--brand-500));
+  box-shadow: 0 0 12px -2px var(--accent, var(--brand-500));
 }
 
 .node[data-category='io'] { --accent: var(--cat-io); }
@@ -49,10 +57,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--radius-sm);
-  background: var(--bg-muted);
+  background: color-mix(in srgb, var(--accent, var(--brand-500)) 16%, transparent);
+  color: var(--accent, var(--brand-400));
   font-size: 13px;
 }
 
@@ -69,10 +78,11 @@
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 2px 5px;
   border-radius: var(--radius-sm);
   opacity: 0;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: opacity 0.15s var(--ease), background 0.15s var(--ease),
+    color 0.15s var(--ease);
 }
 
 .node:hover .node__remove {
@@ -89,6 +99,7 @@
   padding: 0 var(--space-3) var(--space-2);
   color: var(--text-muted);
   font-size: 12px;
+  line-height: 1.4;
 }
 
 .node__body {
@@ -101,15 +112,16 @@
 .node-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 5px;
 }
 
 .node-field__label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .node-control {
@@ -117,17 +129,31 @@
   padding: 7px 9px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  background: var(--bg-surface);
+  background: var(--bg-canvas);
   color: var(--text-strong);
   font-size: 13px;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+.node-control::placeholder {
+  color: var(--text-muted);
 }
 
 .node-control:focus {
-  border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px var(--brand-soft);
+  border-color: var(--accent, var(--brand-500));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, var(--brand-500)) 18%, transparent);
+}
+
+select.node-control {
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
 }
 
 .node-textarea {
@@ -139,15 +165,19 @@
 
 /* Handles */
 .react-flow__handle {
-  width: 10px;
-  height: 10px;
-  background: var(--bg-surface);
+  width: 11px;
+  height: 11px;
+  background: var(--bg-elevated);
   border: 2px solid var(--accent, var(--brand-500));
   border-radius: 50%;
+  transition: box-shadow 0.15s var(--ease), background 0.15s var(--ease);
 }
 
-.react-flow__handle:hover {
+.react-flow__handle:hover,
+.react-flow__handle.connecting,
+.react-flow__handle.connectionindicator:hover {
   background: var(--accent, var(--brand-500));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, var(--brand-500)) 22%, transparent);
 }
 
 /* Port labels sit just outside the node so they never overlap its content. */
@@ -156,21 +186,28 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 10px;
+  font-family: var(--font-mono);
   line-height: 1;
   color: var(--text-muted);
   background: var(--bg-canvas);
-  padding: 1px 4px;
+  padding: 2px 5px;
   border-radius: 4px;
+  border: 1px solid var(--border);
   white-space: nowrap;
   pointer-events: none;
 }
 
 .handle-label--left {
   right: 100%;
-  margin-right: 8px;
+  margin-right: 9px;
 }
 
 .handle-label--right {
   left: 100%;
-  margin-left: 8px;
+  margin-left: 9px;
+}
+
+@keyframes node-in {
+  from { opacity: 0; transform: scale(0.96) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

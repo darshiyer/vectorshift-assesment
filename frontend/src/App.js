@@ -21,7 +21,14 @@ function App() {
     <div className="app">
       <header className="app__header">
         <div className="app__brand">
-          <span className="app__logo">VS</span>
+          <span className="app__mark" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+              <circle cx="5" cy="13" r="3" className="mark-node" />
+              <circle cx="21" cy="6" r="3" className="mark-node" />
+              <circle cx="21" cy="20" r="3" className="mark-node" />
+              <path d="M8 13 L18 6 M8 13 L18 20" className="mark-edge" />
+            </svg>
+          </span>
           <div>
             <h1 className="app__title">Pipeline Builder</h1>
             <p className="app__subtitle">Design, connect and validate workflows</p>
