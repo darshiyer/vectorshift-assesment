@@ -46,6 +46,45 @@
 .node[data-category='data'] { --accent: var(--cat-data); }
 .node[data-category='text'] { --accent: var(--cat-text); }
 
+/* Validation states override the accent so the whole node reads as off. */
+.node[data-status='error'] {
+  border-color: color-mix(in srgb, var(--danger) 55%, transparent);
+  box-shadow: 0 0 22px -8px var(--danger), var(--shadow-md);
+}
+
+.node[data-status='warning'] {
+  border-color: color-mix(in srgb, var(--cat-logic) 50%, transparent);
+}
+
+.node__issue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 var(--space-3) var(--space-3);
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.node__issue--error {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.node__issue--warning {
+  color: var(--cat-logic);
+  background: color-mix(in srgb, var(--cat-logic) 14%, transparent);
+}
+
+.node__issue-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
 .node__header {
   display: flex;
   align-items: center;

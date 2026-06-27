@@ -6,12 +6,10 @@
 
 import { Handle, Position } from 'reactflow';
 import { useStore } from '../store';
+import { computeValues, computeHandles } from '../nodes/handles';
+import { useNodeIssues } from '../lib/ValidationContext';
 import { NodeField } from './NodeField';
 import './BaseNode.css';
-
-// A default may be a static value or a function of the node id (e.g. "input_1").
-const resolveDefault = (def, id) =>
-  typeof def === 'function' ? def(id) : def ?? '';
 
 // Spread handles evenly down a side: 1 handle -> 50%, 2 -> 33%/66%, etc.
 const offsetFor = (index, total) => `${((index + 1) / (total + 1)) * 100}%`;
@@ -19,24 +17,22 @@ const offsetFor = (index, total) => `${((index + 1) / (total + 1)) * 100}%`;
 export const BaseNode = ({ id, data, config }) => {
   const updateNodeField = useStore((state) => state.updateNodeField);
   const removeNode = useStore((state) => state.removeNode);
+  const issues = useNodeIssues(id);
 
   const fields = config.fields ?? [];
 
   // Current value of every field, falling back to its configured default.
-  const values = {};
-  for (const field of fields) {
-    values[field.name] = data?.[field.name] ?? resolveDefault(field.default, id);
-  }
+  const values = computeValues(config, id, data);
 
   // Handles can be a static list or derived from the node's live values
   // (the Text node uses this to grow handles from {{ variables }}).
-  const handles =
-    typeof config.handles === 'function'
-      ? config.handles({ id, data, values })
-      : config.handles ?? [];
+  const handles = computeHandles(config, id, data);
 
   const targets = handles.filter((h) => h.type === 'target');
   const sources = handles.filter((h) => h.type === 'source');
+
+  const topIssue =
+    issues.find((i) => i.level === 'error') ?? issues.find((i) => i.level === 'warning');
 
   const renderHandles = (list, position) =>
     list.map((handle, index) => (
@@ -60,7 +56,11 @@ export const BaseNode = ({ id, data, config }) => {
     ));
 
   return (
-    <div className="node" data-category={config.category}>
+    <div
+      className="node"
+      data-category={config.category}
+      data-status={topIssue?.level}
+    >
       {renderHandles(targets, Position.Left)}
 
       <header className="node__header">
@@ -97,6 +97,13 @@ export const BaseNode = ({ id, data, config }) => {
 
       {/* Allow a config to inject custom UI without abandoning the abstraction. */}
       {config.render?.({ id, data, values })}
+
+      {topIssue && (
+        <div className={`node__issue node__issue--${topIssue.level}`}>
+          <span className="node__issue-dot" />
+          {topIssue.message}
+        </div>
+      )}
 
       {renderHandles(sources, Position.Right)}
     </div>
