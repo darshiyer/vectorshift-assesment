@@ -1,0 +1,169 @@
+/* BaseNode.css — shared look for every node type. */
+
+.node {
+  position: relative;
+  min-width: 220px;
+  max-width: 320px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  font-size: 13px;
+  color: var(--text-base);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.node:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.react-flow__node.selected .node {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 2px var(--brand-soft), var(--shadow-md);
+}
+
+/* Category accent bar across the top of each node. */
+.node::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--accent, var(--brand-500));
+}
+
+.node[data-category='io'] { --accent: var(--cat-io); }
+.node[data-category='llm'] { --accent: var(--cat-llm); }
+.node[data-category='logic'] { --accent: var(--cat-logic); }
+.node[data-category='data'] { --accent: var(--cat-data); }
+.node[data-category='text'] { --accent: var(--cat-text); }
+
+.node__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+}
+
+.node__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-muted);
+  font-size: 13px;
+}
+
+.node__title {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.node__remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.node:hover .node__remove {
+  opacity: 1;
+}
+
+.node__remove:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.node__description {
+  margin: 0;
+  padding: 0 var(--space-3) var(--space-2);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.node__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.node-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.node-field__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.node-control {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-strong);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.node-control:focus {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.node-textarea {
+  resize: none;
+  overflow: hidden;
+  line-height: 1.5;
+  min-height: 38px;
+}
+
+/* Handles */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: var(--bg-surface);
+  border: 2px solid var(--accent, var(--brand-500));
+  border-radius: 50%;
+}
+
+.react-flow__handle:hover {
+  background: var(--accent, var(--brand-500));
+}
+
+.handle-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.handle-label--left {
+  left: 14px;
+}
+
+.handle-label--right {
+  right: 14px;
+}
