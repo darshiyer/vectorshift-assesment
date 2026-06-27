@@ -87,7 +87,9 @@ def read_root():
 def parse_pipeline(pipeline: Pipeline) -> ParseResult:
     is_dag, execution_order, cycle_nodes = analyze(pipeline.nodes, pipeline.edges)
     return ParseResult(
-        num_nodes=len(pipeline.nodes),
+        # A node is identified by its id, so two entries sharing an id are the
+        # same node — count unique ids to stay consistent with the analysis.
+        num_nodes=len({node.id for node in pipeline.nodes}),
         num_edges=len(pipeline.edges),
         is_dag=is_dag,
         execution_order=execution_order,
