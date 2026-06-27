@@ -69,7 +69,8 @@ def analyze(nodes: list[Node], edges: list[Edge]) -> tuple[bool, list[str], list
                 queue.append(neighbor)
 
     is_dag = len(execution_order) == len(ids)
-    cycle_nodes = [node_id for node_id in order if node_id not in set(execution_order)]
+    resolved = set(execution_order)
+    cycle_nodes = [node_id for node_id in order if node_id not in resolved]
 
     return is_dag, (execution_order if is_dag else []), cycle_nodes
 
