@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+frontend/node_modules/
+
+# python
+backend/__pycache__/
+backend/.venv/
+**/__pycache__/
+*.pyc
+
+# build
+frontend/build/
+frontend/coverage/
+
+# env / editor
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/
+
+# assessment brief (kept locally, not part of the codebase)
+*.pdf
+
+# local tooling
+.claude/
