@@ -70,14 +70,32 @@ Submit posts the live nodes and edges to `POST /pipelines/parse`. The backend
 detecting cycles with **Kahn's algorithm**. The result is shown in a dialog with
 the counts and the DAG verdict (and a friendly error state if the API is down).
 
+## Beyond the brief
+
+The graph is treated as a first-class citizen, the way a real pipeline product
+would:
+
+- **Live validation** — the same DAG analysis the backend runs, executed on the
+  client as you build. A header pill shows pipeline health and each node flags
+  its own issue (cycle, unconnected output, unused input). See
+  [`src/lib/validation.js`](frontend/src/lib/validation.js).
+- **Typed handles + connection validation** — handles carry a `dataType`, and
+  incompatible, self, or wrong-direction connections are rejected both while
+  dragging and on drop. Each target handle takes a single input.
+- **Execution order** — `/pipelines/parse` also returns the topological run
+  order (and the offending nodes for a cycle), surfaced in the result dialog.
+- **Variable autocomplete** — typing `{{` in a Text node suggests the pipeline's
+  Input variables, with keyboard navigation.
+
 ## Tests
 
 ```bash
-cd backend && pytest        # DAG edge cases: cycles, self-loops, disconnected graphs, ...
+cd backend && pytest                 # DAG edge cases: cycles, self-loops, disconnected, ...
+cd frontend && CI=true npm test      # connection validation + variable parsing
 ```
 
 ## Notable touches
 
 - Pipelines persist to `localStorage`, so a refresh doesn't lose your work.
 - Delete a node from its header; connected edges are pruned automatically.
-- Self-connections are rejected and live node/edge counts show in the header.
+- Live node/edge counts in the header; dark, animated node-editor UI throughout.
