@@ -76,3 +76,11 @@ def test_back_edge_creates_cycle():
     # 'a' is not part of the cycle; b, c, d are.
     assert "a" not in result["cycle_nodes"]
     assert set(result["cycle_nodes"]) == {"b", "c", "d"}
+
+
+def test_duplicate_node_id_does_not_falsely_report_a_cycle():
+    # A repeated id used to desync execution_order length from the unique node
+    # count, making a trivial graph look cyclic.
+    result = parse(["a", "a"], [])
+    assert result["is_dag"] is True
+    assert result["execution_order"] == ["a"]

@@ -47,7 +47,10 @@ def analyze(nodes: list[Node], edges: list[Edge]) -> tuple[bool, list[str], list
     reference unknown nodes are ignored so a malformed payload can't make a valid
     pipeline look cyclic.
     """
-    order = [node.id for node in nodes]
+    # dict.fromkeys dedupes while keeping first-seen order — guards against a
+    # malformed payload with a repeated node id throwing off the node count
+    # used in the is_dag check below.
+    order = list(dict.fromkeys(node.id for node in nodes))
     ids = set(order)
     adjacency = {node_id: [] for node_id in ids}
     indegree = {node_id: 0 for node_id in ids}
