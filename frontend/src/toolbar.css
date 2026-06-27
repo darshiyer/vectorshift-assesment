@@ -1,0 +1,72 @@
+/* toolbar.css — the node palette sidebar. */
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 240px;
+  flex-shrink: 0;
+  padding: var(--space-4);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.toolbar__heading {
+  margin: 0 0 var(--space-2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.toolbar__nodes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.palette-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: grab;
+  user-select: none;
+  text-align: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.palette-node:hover {
+  border-color: var(--brand-500);
+  box-shadow: var(--shadow-sm);
+}
+
+.palette-node:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+}
+
+.palette-node__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-soft);
+  color: var(--brand-600);
+  font-size: 14px;
+}
+
+.palette-node__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-base);
+}
