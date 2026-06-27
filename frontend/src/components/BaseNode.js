@@ -33,6 +33,8 @@ export const BaseNode = ({ id, data, config }) => {
   const topIssue =
     issues.find((i) => i.level === 'error') ?? issues.find((i) => i.level === 'warning');
 
+  // Bare connection points — their names are listed in the ports grid inside
+  // the card, matching the design's "ports panel" rather than floating labels.
   const renderHandles = (list, position) =>
     list.map((handle, index) => (
       <Handle
@@ -41,17 +43,7 @@ export const BaseNode = ({ id, data, config }) => {
         position={position}
         id={`${id}-${handle.id}`}
         style={{ top: offsetFor(index, list.length) }}
-      >
-        {handle.label && (
-          <span
-            className={`handle-label handle-label--${
-              position === Position.Left ? 'left' : 'right'
-            }`}
-          >
-            {handle.label}
-          </span>
-        )}
-      </Handle>
+      />
     ));
 
   return (
@@ -67,6 +59,7 @@ export const BaseNode = ({ id, data, config }) => {
           {config.icon}
         </span>
         <span className="node__title">{config.label}</span>
+        <span className="node__id">{id}</span>
         <button
           type="button"
           className="node__remove"
@@ -81,18 +74,37 @@ export const BaseNode = ({ id, data, config }) => {
         <p className="node__description">{config.description}</p>
       )}
 
-      {fields.length > 0 && (
-        <div className="node__body">
-          {fields.map((field) => (
-            <NodeField
-              key={field.name}
-              field={field}
-              value={values[field.name]}
-              onChange={(value) => updateNodeField(id, field.name, value)}
-            />
-          ))}
-        </div>
-      )}
+      <div className="node__body">
+        {(targets.length > 0 || sources.length > 0) && (
+          <div className="node__ports">
+            <div className="node__port-col">
+              {targets.map((handle) => (
+                <div className="node__port-row" key={handle.id}>
+                  <span className="node__port-dot" />
+                  {handle.label ?? handle.id}
+                </div>
+              ))}
+            </div>
+            <div className="node__port-col node__port-col--right">
+              {sources.map((handle) => (
+                <div className="node__port-row" key={handle.id}>
+                  {handle.label ?? handle.id}
+                  <span className="node__port-dot" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {fields.map((field) => (
+          <NodeField
+            key={field.name}
+            field={field}
+            value={values[field.name]}
+            onChange={(value) => updateNodeField(id, field.name, value)}
+          />
+        ))}
+      </div>
 
       {/* Allow a config to inject custom UI without abandoning the abstraction. */}
       {config.render?.({ id, data, values })}
