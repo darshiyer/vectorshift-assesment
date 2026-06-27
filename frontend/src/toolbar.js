@@ -9,7 +9,9 @@ export const PipelineToolbar = () => (
   <aside className="toolbar">
     {toolbarGroups.map((group) => (
       <div className="toolbar__group" key={group.category}>
-        <h3 className="toolbar__heading">{group.label}</h3>
+        <h3 className="toolbar__heading" style={{ '--cat': group.color }}>
+          {group.label}
+        </h3>
         <div className="toolbar__nodes">
           {group.nodes.map((node) => (
             <DraggableNode
@@ -17,6 +19,7 @@ export const PipelineToolbar = () => (
               type={node.type}
               label={node.label}
               icon={node.icon}
+              color={node.color}
             />
           ))}
         </div>
