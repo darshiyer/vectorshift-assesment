@@ -7,11 +7,13 @@ import { shallow } from 'zustand/shallow';
 import { useStore } from './store';
 import { nodeTypes } from './nodes/registry';
 import { isConnectionValid } from './nodes/handles';
+import { FlowEdge } from './components/FlowEdge';
 
 import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+const edgeTypes = { smoothstep: FlowEdge };
 
 const selector = (state) => ({
   nodes: state.nodes,
@@ -69,6 +71,19 @@ export const PipelineUI = () => {
     []
   );
 
+  // A light physical tilt while a node is being dragged, applied directly to
+  // the DOM (not React state) so it stays perfectly in sync with the cursor
+  // without forcing a re-render on every pointer move.
+  const onNodeDragStart = useCallback((event, node) => {
+    const el = document.querySelector(`[data-id="${node.id}"] .node`);
+    el?.classList.add('node--dragging');
+  }, []);
+
+  const onNodeDragStop = useCallback((event, node) => {
+    const el = document.querySelector(`[data-id="${node.id}"] .node`);
+    el?.classList.remove('node--dragging');
+  }, []);
+
   return (
     <div className="canvas" ref={reactFlowWrapper}>
       <ReactFlow
@@ -80,8 +95,11 @@ export const PipelineUI = () => {
         isValidConnection={isValidConnection}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDragStop={onNodeDragStop}
         onInit={setReactFlowInstance}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         proOptions={proOptions}
         snapGrid={[gridSize, gridSize]}
         connectionLineType="smoothstep"

@@ -1,0 +1,32 @@
+/* FlowEdge.css */
+
+.flow-edge__path {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+  transition: stroke 0.15s var(--ease);
+}
+
+.flow-edge__path.is-selected {
+  stroke: var(--brand-500);
+}
+
+/* Travels along the edge's own path via the CSS motion-path spec. */
+.flow-edge__dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: var(--brand-400);
+  box-shadow: 0 0 8px 2px var(--brand-glow);
+  offset-distance: 0%;
+  animation: edge-travel 2.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes edge-travel {
+  from { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  to { offset-distance: 100%; opacity: 0; }
+}

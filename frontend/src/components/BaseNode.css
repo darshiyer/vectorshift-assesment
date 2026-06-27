@@ -209,14 +209,30 @@ select.node-control {
   background: var(--bg-elevated);
   border: 2px solid var(--accent, var(--brand-500));
   border-radius: 50%;
-  transition: box-shadow 0.15s var(--ease), background 0.15s var(--ease);
+  transition: box-shadow 0.18s var(--ease), background 0.18s var(--ease),
+    transform 0.18s var(--ease);
 }
 
 .react-flow__handle:hover,
-.react-flow__handle.connecting,
-.react-flow__handle.connectionindicator:hover {
+.react-flow__handle.connecting {
   background: var(--accent, var(--brand-500));
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, var(--brand-500)) 22%, transparent);
+}
+
+/* "Magnetic" feel: while dragging a wire, a compatible target handle grows and
+   glows so it's obvious where to drop. */
+.react-flow__handle.connectionindicator {
+  transform: scale(1.5);
+  background: var(--accent, var(--brand-500));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent, var(--brand-500)) 28%, transparent),
+    0 0 16px 2px var(--accent, var(--brand-500));
+}
+
+/* A light physical tilt while a node is being dragged, springing back on drop. */
+.node--dragging {
+  transform: rotate(-2deg) scale(1.02) !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease) !important;
 }
 
 /* Port labels sit just outside the node so they never overlap its content. */
