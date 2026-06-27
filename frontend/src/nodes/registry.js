@@ -1,4 +1,3 @@
-// registry.js
 // Single source of truth derived from the node configs: the ReactFlow nodeTypes
 // map and the grouped list the toolbar renders. Register a node once (in
 // nodeConfigs.js) and it appears everywhere automatically.

@@ -1,4 +1,3 @@
-// ui.js
 // The drag-and-drop canvas where pipelines are assembled.
 
 import { useState, useRef, useCallback } from 'react';

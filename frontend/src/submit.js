@@ -1,6 +1,3 @@
-// submit.js
-// Sends the current pipeline to the backend and surfaces the result.
-
 import { useState } from 'react';
 import { useStore } from './store';
 import { ResultDialog } from './components/ResultDialog';

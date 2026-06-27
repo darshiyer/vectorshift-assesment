@@ -1,7 +1,4 @@
-// useCountUp.js
-// Animates a number tweening toward `value` instead of snapping, so the header
-// stats feel alive when nodes/edges are added or removed.
-
+// Tween a number toward `value` instead of snapping to it.
 import { useEffect, useRef, useState } from 'react';
 
 export const useCountUp = (value, durationMs = 280) => {

@@ -1,4 +1,3 @@
-// validation.js
 // Turns the raw graph into human-readable pipeline issues: cycles, unconnected
 // outputs, and unused inputs. This is the same analysis the backend performs,
 // run live on the client so the user gets feedback while building.

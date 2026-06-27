@@ -1,7 +1,5 @@
-// draggableNode.js
-// A single draggable chip in the palette. Carries its node type through the
-// drag's dataTransfer so the canvas knows what to create on drop.
-
+// A draggable palette chip. Stashes its node type on the drag's dataTransfer
+// so the canvas knows what to create when it's dropped.
 export const DraggableNode = ({ type, label, icon }) => {
   const onDragStart = (event) => {
     event.dataTransfer.setData(

@@ -1,4 +1,3 @@
-// parseVariables.js
 // Extract {{ variable }} references from text. Only valid JavaScript identifiers
 // count, and each name is returned once in order of first appearance.
 

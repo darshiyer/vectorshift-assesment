@@ -1,6 +1,3 @@
-// ResultDialog.js
-// User-friendly presentation of the backend's pipeline analysis (or an error).
-
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './ResultDialog.css';

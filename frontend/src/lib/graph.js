@@ -1,4 +1,3 @@
-// graph.js
 // Pure graph helpers shared by the live validator. Kahn's algorithm gives us a
 // topological order and, for free, the set of nodes left in a cycle.
 

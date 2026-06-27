@@ -1,4 +1,3 @@
-// handles.js
 // Shared resolution of a node's field values and handles. BaseNode (rendering),
 // the validation layer, and connection checks all go through here so they can
 // never disagree about what handles a node has.

@@ -1,4 +1,3 @@
-// ValidationContext.js
 // Computes pipeline validation once from the store and shares it with the header
 // status pill and every node, so the analysis runs a single time per change.
 

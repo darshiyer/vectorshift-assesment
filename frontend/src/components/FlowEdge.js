@@ -1,7 +1,5 @@
-// FlowEdge.js
-// A smoothstep edge with a glowing dot continuously traveling along the path —
-// a small touch that makes the canvas read as "data is flowing", not static
-// wires. Pure SVG (offset-path), no extra dependency.
+// A smoothstep edge with a glowing dot traveling along the path, so the canvas
+// reads as "data flowing" rather than static wires. Uses CSS offset-path.
 
 import { getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 import './FlowEdge.css';

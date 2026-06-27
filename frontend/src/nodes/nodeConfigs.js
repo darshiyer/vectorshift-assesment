@@ -1,4 +1,3 @@
-// nodeConfigs.js
 // Every node type, expressed as data. This is the payoff of the BaseNode
 // abstraction: a new node is a config object here, nothing more.
 

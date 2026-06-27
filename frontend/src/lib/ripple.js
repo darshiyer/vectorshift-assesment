@@ -1,6 +1,5 @@
-// ripple.js
-// A tiny, dependency-free ripple effect: on mousedown, drop a growing circle at
-// the click point and let it fade out. Attach via onMouseDown={spawnRipple}.
+// Lightweight click ripple — drop a growing circle at the cursor, let it fade.
+// Attach with onMouseDown={spawnRipple}.
 
 export const spawnRipple = (event) => {
   const button = event.currentTarget;

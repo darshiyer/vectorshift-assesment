@@ -1,4 +1,3 @@
-// BaseNode.js
 // The single node primitive every node type is built on. A node is described by
 // a plain config object (title, icon, fields, handles); BaseNode turns that
 // config into a rendered ReactFlow node. New node types are pure data — see

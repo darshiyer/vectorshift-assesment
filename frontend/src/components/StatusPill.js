@@ -1,4 +1,3 @@
-// StatusPill.js
 // Live pipeline health in the header, driven by the shared validation context.
 // Bursts a brief glow ring the moment the pipeline transitions into "valid".
 

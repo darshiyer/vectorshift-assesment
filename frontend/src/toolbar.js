@@ -1,4 +1,3 @@
-// toolbar.js
 // The node palette. Renders straight from the registry, grouped by category, so
 // new node types show up here automatically.
 

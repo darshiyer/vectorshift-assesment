@@ -1,4 +1,3 @@
-// VariableTextarea.js
 // Auto-resizing textarea that suggests pipeline variables. When the caret sits
 // just after an open "{{", it offers the names of the pipeline's Input nodes so
 // users can wire variables without remembering exact names.

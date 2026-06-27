@@ -1,4 +1,3 @@
-// store.js
 // Central pipeline state: nodes, edges, and the actions that mutate them.
 
 import { create } from 'zustand';

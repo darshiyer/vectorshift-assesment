@@ -1,4 +1,3 @@
-// NodeField.js
 // Declarative field renderer. A node config describes its inputs as data; this
 // component maps each field descriptor to the right control. Adding a new field
 // type means adding one case here, not touching any node.
