@@ -4,6 +4,7 @@
 // type means adding one case here, not touching any node.
 
 import { useLayoutEffect, useRef } from 'react';
+import { VariableTextarea } from './VariableTextarea';
 
 const AutoResizeTextarea = ({ value, onChange, placeholder }) => {
   const ref = useRef(null);
@@ -47,6 +48,12 @@ export const NodeField = ({ field, value, onChange }) => {
             </option>
           ))}
         </select>
+      ) : field.type === 'textarea' && field.suggest ? (
+        <VariableTextarea
+          value={value}
+          placeholder={field.placeholder}
+          onChange={onChange}
+        />
       ) : field.type === 'textarea' ? (
         <AutoResizeTextarea
           value={value}

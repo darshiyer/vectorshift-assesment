@@ -1,0 +1,42 @@
+/* VariableTextarea.css */
+
+.var-textarea {
+  position: relative;
+}
+
+.var-suggest {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.var-suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-base);
+  cursor: pointer;
+}
+
+.var-suggest__item.is-active {
+  background: var(--brand-soft);
+  color: var(--text-strong);
+}
+
+.var-suggest__brace {
+  color: var(--brand-400);
+  opacity: 0.7;
+}

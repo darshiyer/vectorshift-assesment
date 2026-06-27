@@ -75,6 +75,7 @@ const textNode = {
       name: 'text',
       label: 'Text',
       type: 'textarea',
+      suggest: true,
       default: '{{ input }}',
       placeholder: 'Write text, reference variables with {{ name }}',
     },
