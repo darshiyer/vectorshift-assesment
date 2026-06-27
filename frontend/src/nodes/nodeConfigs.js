@@ -26,7 +26,7 @@ const inputNode = {
       default: 'Text',
     },
   ],
-  handles: [{ id: 'value', type: 'source' }],
+  handles: [{ id: 'value', type: 'source', dataType: 'any' }],
 };
 
 const outputNode = {
@@ -49,7 +49,7 @@ const outputNode = {
       default: 'Text',
     },
   ],
-  handles: [{ id: 'value', type: 'target' }],
+  handles: [{ id: 'value', type: 'target', dataType: 'any' }],
 };
 
 const llmNode = {
@@ -59,9 +59,9 @@ const llmNode = {
   icon: '✦',
   description: 'Runs a prompt through a language model.',
   handles: [
-    { id: 'system', type: 'target', label: 'system' },
-    { id: 'prompt', type: 'target', label: 'prompt' },
-    { id: 'response', type: 'source', label: 'response' },
+    { id: 'system', type: 'target', label: 'system', dataType: 'text' },
+    { id: 'prompt', type: 'target', label: 'prompt', dataType: 'text' },
+    { id: 'response', type: 'source', label: 'response', dataType: 'text' },
   ],
 };
 
@@ -85,8 +85,9 @@ const textNode = {
       id: `var-${name}`,
       type: 'target',
       label: name,
+      dataType: 'text',
     })),
-    { id: 'output', type: 'source' },
+    { id: 'output', type: 'source', dataType: 'text' },
   ],
 };
 
@@ -107,9 +108,9 @@ const filterNode = {
     },
   ],
   handles: [
-    { id: 'input', type: 'target', label: 'in' },
-    { id: 'kept', type: 'source', label: 'kept' },
-    { id: 'dropped', type: 'source', label: 'dropped' },
+    { id: 'input', type: 'target', label: 'in', dataType: 'any' },
+    { id: 'kept', type: 'source', label: 'kept', dataType: 'any' },
+    { id: 'dropped', type: 'source', label: 'dropped', dataType: 'any' },
   ],
 };
 
@@ -128,9 +129,9 @@ const mathNode = {
     },
   ],
   handles: [
-    { id: 'a', type: 'target', label: 'a' },
-    { id: 'b', type: 'target', label: 'b' },
-    { id: 'result', type: 'source', label: '=' },
+    { id: 'a', type: 'target', label: 'a', dataType: 'number' },
+    { id: 'b', type: 'target', label: 'b', dataType: 'number' },
+    { id: 'result', type: 'source', label: '=', dataType: 'number' },
   ],
 };
 
@@ -156,8 +157,8 @@ const apiNode = {
     },
   ],
   handles: [
-    { id: 'body', type: 'target', label: 'body' },
-    { id: 'response', type: 'source', label: 'response' },
+    { id: 'body', type: 'target', label: 'body', dataType: 'any' },
+    { id: 'response', type: 'source', label: 'response', dataType: 'any' },
   ],
 };
 
@@ -183,8 +184,8 @@ const knowledgeBaseNode = {
     },
   ],
   handles: [
-    { id: 'query', type: 'target', label: 'query' },
-    { id: 'results', type: 'source', label: 'results' },
+    { id: 'query', type: 'target', label: 'query', dataType: 'text' },
+    { id: 'results', type: 'source', label: 'results', dataType: 'any' },
   ],
 };
 

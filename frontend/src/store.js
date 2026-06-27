@@ -9,6 +9,7 @@ import {
   applyEdgeChanges,
   MarkerType,
 } from 'reactflow';
+import { isConnectionValid } from './nodes/handles';
 
 const edgeOptions = {
   type: 'smoothstep',
@@ -53,9 +54,17 @@ export const useStore = create(
       },
 
       onConnect: (connection) => {
-        // Reject self-connections; ReactFlow already de-dupes identical handles.
-        if (connection.source === connection.target) return;
-        set({ edges: addEdge({ ...connection, ...edgeOptions }, get().edges) });
+        // Enforce self-loop, direction and data-type rules.
+        if (!isConnectionValid(connection, get().nodes)) return;
+        // A target handle takes a single input: replace any existing edge into it.
+        const edges = get().edges.filter(
+          (edge) =>
+            !(
+              edge.target === connection.target &&
+              edge.targetHandle === connection.targetHandle
+            )
+        );
+        set({ edges: addEdge({ ...connection, ...edgeOptions }, edges) });
       },
 
       // Immutable field update — the original mutated node.data in place, which

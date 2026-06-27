@@ -6,6 +6,7 @@ import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 import { useStore } from './store';
 import { nodeTypes } from './nodes/registry';
+import { isConnectionValid } from './nodes/handles';
 
 import 'reactflow/dist/style.css';
 
@@ -62,6 +63,12 @@ export const PipelineUI = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  // Live validity feedback while dragging an edge.
+  const isValidConnection = useCallback(
+    (connection) => isConnectionValid(connection, useStore.getState().nodes),
+    []
+  );
+
   return (
     <div className="canvas" ref={reactFlowWrapper}>
       <ReactFlow
@@ -70,6 +77,7 @@ export const PipelineUI = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        isValidConnection={isValidConnection}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onInit={setReactFlowInstance}
