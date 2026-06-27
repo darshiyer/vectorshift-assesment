@@ -2,6 +2,7 @@
 // User-friendly presentation of the backend's pipeline analysis (or an error).
 
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './ResultDialog.css';
 
 export const ResultDialog = ({ status, result, onClose }) => {
@@ -14,7 +15,7 @@ export const ResultDialog = ({ status, result, onClose }) => {
 
   const isError = status === 'error';
 
-  return (
+  return createPortal(
     <div className="dialog-overlay" onClick={onClose}>
       <div
         className="dialog"
@@ -88,6 +89,7 @@ export const ResultDialog = ({ status, result, onClose }) => {
           Close
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
