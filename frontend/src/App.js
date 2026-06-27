@@ -28,28 +28,59 @@ function App() {
       <div className="app">
         <header className="app__header">
           <div className="app__brand">
-            <span className="app__mark" aria-hidden="true">
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                <circle cx="5" cy="13" r="3" className="mark-node" />
-                <circle cx="21" cy="6" r="3" className="mark-node" />
-                <circle cx="21" cy="20" r="3" className="mark-node" />
-                <path d="M8 13 L18 6 M8 13 L18 20" className="mark-edge" />
-              </svg>
-            </span>
+            <svg className="app__mark" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="brandGradient" x1="0" y1="0" x2="34" y2="34">
+                  <stop offset="0" stopColor="#22d3ee" />
+                  <stop offset="0.55" stopColor="#7c83ff" />
+                  <stop offset="1" stopColor="#b07cff" />
+                </linearGradient>
+              </defs>
+              <path
+                className="app__mark-link"
+                d="M9 9 L25 17 M25 17 L9 25"
+                stroke="url(#brandGradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray="3 4"
+              />
+              <circle className="app__mark-node" cx="9" cy="9" r="4.4" fill="url(#brandGradient)" />
+              <circle
+                className="app__mark-node app__mark-node--2"
+                cx="25"
+                cy="17"
+                r="4.4"
+                fill="url(#brandGradient)"
+              />
+              <circle
+                className="app__mark-node app__mark-node--3"
+                cx="9"
+                cy="25"
+                r="4.4"
+                fill="url(#brandGradient)"
+              />
+            </svg>
             <div>
-              <h1 className="app__title">Pipeline Builder</h1>
-              <p className="app__subtitle">
-                Design, connect and validate workflows
-              </p>
+              <h1 className="app__title">Pipeline Studio</h1>
+              <p className="app__subtitle">Node orchestration</p>
+            </div>
+          </div>
+
+          <div className="app__center">
+            <StatusPill />
+            <div className="app__counters">
+              <div className="app__counter">
+                <b>{animatedNodeCount}</b>
+                <span>nodes</span>
+              </div>
+              <div className="app__counter">
+                <b>{animatedEdgeCount}</b>
+                <span>edges</span>
+              </div>
             </div>
           </div>
 
           <div className="app__actions">
-            <StatusPill />
-            <span className="app__stats">
-              {animatedNodeCount} {nodeCount === 1 ? 'node' : 'nodes'} ·{' '}
-              {animatedEdgeCount} {edgeCount === 1 ? 'edge' : 'edges'}
-            </span>
             <button
               type="button"
               className="btn btn--ghost"

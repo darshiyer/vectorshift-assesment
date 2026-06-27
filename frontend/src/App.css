@@ -9,74 +9,121 @@
 /* Header ------------------------------------------------------------------ */
 
 .app__header {
+  position: relative;
+  z-index: 5;
+  height: 60px;
+  flex: 0 0 60px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-3) var(--space-5);
-  background: rgba(17, 20, 29, 0.8);
-  backdrop-filter: blur(12px);
+  padding: 0 var(--space-5);
+  background: linear-gradient(180deg, rgba(22, 27, 39, 0.86), rgba(11, 14, 20, 0.7));
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
-  z-index: 3;
 }
 
 .app__brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .app__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  background: radial-gradient(120% 120% at 30% 20%, #1d2335, #0e1119);
-  border: 1px solid var(--border-strong);
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  filter: drop-shadow(0 0 10px rgba(124, 131, 255, 0.45));
 }
 
-.mark-node {
-  fill: var(--brand-400);
+.app__mark-link {
+  animation: mark-dash 3.4s linear infinite;
+}
+
+.app__mark-node {
+  transform-box: fill-box;
   transform-origin: center;
-  animation: mark-pulse 2.6s var(--ease) infinite;
+  animation: mark-pulse 3.2s var(--ease-io) infinite;
 }
-.mark-node:nth-child(2) { animation-delay: 0.3s; }
-.mark-node:nth-child(3) { animation-delay: 0.6s; }
-
-.mark-edge {
-  stroke: var(--brand-500);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  opacity: 0.6;
-}
+.app__mark-node--2 { animation-delay: 0.5s; }
+.app__mark-node--3 { animation-delay: 1s; }
 
 .app__title {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  line-height: 1.05;
   color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .app__subtitle {
   margin: 0;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--text-muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.app__actions {
+.app__center {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  margin-left: var(--space-4);
+  min-width: 0;
+  overflow: hidden;
 }
 
-.app__stats {
-  font-size: 12px;
+.app__counters {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+}
+
+.app__counter {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 0 9px;
+}
+
+.app__counter + .app__counter {
+  border-left: 1px solid var(--border);
+}
+
+.app__counter b {
   font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.app__counter span {
+  font-size: 10px;
   color: var(--text-muted);
-  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.app__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .app__body {
@@ -211,14 +258,25 @@
 
 .btn--primary {
   position: relative;
-  background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+  border: none;
+  background: var(--grad-submit);
   color: #fff;
-  box-shadow: 0 0 0 0 var(--brand-glow);
+  font-weight: 600;
+  box-shadow: 0 6px 20px -6px var(--brand-glow), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+}
+
+.btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--grad-sheen);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .btn--primary:not(:disabled):hover {
-  transform: translateY(-1px) scale(1.015);
-  box-shadow: 0 6px 20px var(--brand-glow);
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 12px 30px -8px var(--brand-glow);
 }
 
 .btn--primary:not(:disabled):active {
@@ -238,9 +296,13 @@
 
 /* Animations -------------------------------------------------------------- */
 
+@keyframes mark-dash {
+  to { stroke-dashoffset: -16; }
+}
+
 @keyframes mark-pulse {
-  0%, 100% { opacity: 0.55; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.1); }
+  0%, 100% { opacity: 0.78; }
+  50% { opacity: 1; }
 }
 
 @keyframes mesh-drift {
