@@ -100,24 +100,28 @@ export const VariableTextarea = ({ value, onChange, placeholder }) => {
       />
 
       {open && (
-        <ul className="var-suggest">
-          {suggestions.map((name, i) => (
-            <li
-              key={name}
-              className={`var-suggest__item ${i === active ? 'is-active' : ''}`}
-              // onMouseDown (not onClick) so it fires before the textarea blur.
-              onMouseDown={(e) => {
-                e.preventDefault();
-                applySuggestion(name);
-              }}
-              onMouseEnter={() => setActive(i)}
-            >
-              <span className="var-suggest__brace">{'{{'}</span>
-              {name}
-              <span className="var-suggest__brace">{'}}'}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="var-suggest">
+          <div className="var-suggest__head">Variables</div>
+          <ul className="var-suggest__list">
+            {suggestions.map((name, i) => (
+              <li
+                key={name}
+                className={`var-suggest__item ${i === active ? 'is-active' : ''}`}
+                // onMouseDown (not onClick) so it fires before the textarea blur.
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  applySuggestion(name);
+                }}
+                onMouseEnter={() => setActive(i)}
+              >
+                <span className="var-suggest__brace">{'{{'}</span>
+                {name}
+                <span className="var-suggest__brace">{'}}'}</span>
+                <span className="var-suggest__type">input</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
