@@ -1,32 +1,27 @@
-/* FlowEdge.css */
+/* FlowEdge.css — gradient base stroke + animated marching-dash flow on top,
+ * matching the Pipeline Studio wire style.
+ */
 
-.flow-edge__path {
-  stroke: var(--border-strong);
+.flow-edge__base {
+  fill: none;
   stroke-width: 2;
-  transition: stroke 0.15s var(--ease);
+  opacity: 0.55;
+  stroke-linecap: round;
 }
 
-.flow-edge__path.is-selected {
-  stroke: var(--brand-500);
+.flow-edge__flow {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  animation: flow-edge-march 1.5s linear infinite;
+  filter: drop-shadow(0 0 4px currentColor);
 }
 
-/* Travels along the edge's own path via the CSS motion-path spec. */
-.flow-edge__dot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  margin: -3px;
-  border-radius: 50%;
-  background: var(--brand-400);
-  box-shadow: 0 0 8px 2px var(--brand-glow);
-  offset-distance: 0%;
-  animation: edge-travel 2.4s linear infinite;
-  pointer-events: none;
+.is-selected .flow-edge__base {
+  opacity: 0.9;
 }
 
-@keyframes edge-travel {
-  from { offset-distance: 0%; opacity: 0; }
-  5% { opacity: 1; }
-  95% { opacity: 1; }
-  to { offset-distance: 100%; opacity: 0; }
+@keyframes flow-edge-march {
+  to { stroke-dashoffset: -100; }
 }
