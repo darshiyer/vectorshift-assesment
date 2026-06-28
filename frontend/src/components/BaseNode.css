@@ -1,9 +1,10 @@
 /* BaseNode.css — shared look for every node type (dark). */
 
-.react-flow__node {
-  animation: node-in 0.4s var(--ease) both;
-}
-
+/* The entrance animation lives on the inner .node, NOT on .react-flow__node:
+   ReactFlow positions its wrapper with an inline transform, and animating that
+   same property here would override the node's position (Safari applies the
+   keyframe's `transform: none` over the inline translate, sending nodes to the
+   viewport origin / off-screen). */
 .node {
   position: relative;
   min-width: 220px;
@@ -12,10 +13,12 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 13px;
   color: var(--text-base);
   transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  animation: node-in 0.4s var(--ease) both;
 }
 
 /* A soft gradient sheen along the top edge, masked to just the border ring. */
