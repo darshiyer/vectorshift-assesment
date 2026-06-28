@@ -4,6 +4,11 @@ A visual pipeline builder: drag nodes onto a canvas, connect them, and validate
 the resulting graph against a FastAPI backend. The frontend is React + ReactFlow
 + Zustand; the backend is Python/FastAPI.
 
+**Live demo:** [vectorshift-pipeline-studio.vercel.app](https://vectorshift-pipeline-studio.vercel.app)
+(API: [vectorshift-backend-huaa.onrender.com](https://vectorshift-backend-huaa.onrender.com) —
+hosted on Render's free tier, so the first request after idle can take ~20-30s
+to wake up.)
+
 ## Running locally
 
 **Backend**
