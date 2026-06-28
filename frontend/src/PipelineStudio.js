@@ -138,11 +138,12 @@ export class PipelineStudio extends React.Component{
   ripple(e){const b=e.currentTarget,r=b.getBoundingClientRect(),s=document.createElement('span');s.className='rip';const d=Math.max(r.width,r.height)*2.2;s.style.width=s.style.height=d+'px';s.style.left=(e.clientX-r.left)+'px';s.style.top=(e.clientY-r.top)+'px';b.appendChild(s);setTimeout(()=>s.remove(),620);}
   async submit(e){this.ripple(e);const ns=this.state.nodes,es=this.state.edges;
     try{const res=await fetch(`${API_BASE}/pipelines/parse`,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({nodes:ns.map(n=>({id:n.id})),edges:es.map(ed=>({source:ed.source,target:ed.target}))})});
+      body:JSON.stringify({nodes:ns.map(n=>({id:n.id,type:n.type})),edges:es.map(ed=>({source:ed.source,target:ed.target}))})});
       if(!res.ok)throw new Error('Request failed ('+res.status+')');
       const d=await res.json();
-      this.setState({modal:{nodes:d.num_nodes,edges:d.num_edges,isDag:d.is_dag,order:d.execution_order||[],cycles:d.cycle_nodes||[],error:null},modalClosing:false});
-    }catch(err){this.setState({modal:{nodes:ns.length,edges:es.length,isDag:false,order:[],cycles:[],error:err.message},modalClosing:false});}}
+      this.setState({modal:{nodes:d.num_nodes,edges:d.num_edges,isDag:d.is_dag,order:d.execution_order||[],cycles:d.cycle_nodes||[],
+        depth:d.max_depth||0,types:d.node_types||{},warnings:d.warnings||[],entry:d.entry_nodes||[],terminal:d.terminal_nodes||[],error:null},modalClosing:false});
+    }catch(err){this.setState({modal:{nodes:ns.length,edges:es.length,isDag:false,order:[],cycles:[],depth:0,types:{},warnings:[],entry:[],terminal:[],error:err.message},modalClosing:false});}}
   closeModal(){this.setState({modalClosing:true});clearTimeout(this._mt);this._mt=setTimeout(()=>this.setState({modal:null,modalClosing:false}),200);}
   /* ---- autocomplete ---- */
   varNames(){const ins=this.state.nodes.filter(n=>n.type==='input').map(n=>({k:n.fields.name||n.id,t:'input'}));
@@ -229,6 +230,12 @@ export class PipelineStudio extends React.Component{
     return h('div',{className:'ghost',style:{left:this.state.mouse.x,top:this.state.mouse.y,'--cat':cat}},
       h('span',{className:'pchip-ic'},Icon(g.type)),DEFS[g.type].title);}
   renderModal(){const m=this.state.modal;if(!m)return null;const ok=!m.error&&m.isDag&&m.nodes>0;
+    const sec=(title,body)=>h('div',{className:'modal-sec'},h('div',{className:'sec-h'},title),body);
+    const types=m.types||{};const typeKeys=Object.keys(types);
+    const typeChip=(t)=>{const d=DEFS[t];const cat=d?CAT[d.cat]:'#6e7689';
+      return h('div',{className:'mchip',key:t,style:{'--cat':cat}},h('span',{className:'mchip-dot'}),(d?d.title:t),h('span',{className:'mchip-n'},types[t]));};
+    const flowCol=(lab,ids)=>h('div',{className:'flow-col'},h('span',{className:'flow-lab'},lab),
+      (ids&&ids.length)?ids.map(id=>h('code',{className:'flow-id',key:id},id)):h('span',{className:'flow-none'},'—'));
     return h('div',{className:'scrim'+(this.state.modalClosing?' closing':''),onMouseDown:e=>{if(e.target===e.currentTarget)this.closeModal();}},
       h('div',{className:'modal'},
         h('div',{className:'modal-top'},
@@ -239,16 +246,23 @@ export class PipelineStudio extends React.Component{
               h('svg',{width:24,height:24,viewBox:'0 0 24 24',fill:'none'},h('path',{d:'M12 7v6M12 17h.01',stroke:'currentColor',strokeWidth:2.2,strokeLinecap:'round'},),h('circle',{cx:12,cy:12,r:9,stroke:'currentColor',strokeWidth:2}))),
             h('div',{className:'verdict-t'},h('b',{},m.error?'Backend unreachable':ok?'Valid pipeline':'Invalid pipeline'),
               h('span',{},m.error?(m.error+'. Make sure the API is running.'):ok?'This graph is a directed acyclic graph — ready to run.':(m.cycles.length?'A cycle was detected — pipelines must be acyclic.':'Add at least one node to run.'))))),
-        h('div',{className:'modal-stats'},
+        h('div',{className:'modal-stats'+(ok?' three':'')},
           h('div',{className:'mstat'},h('b',{},m.nodes),h('span',{},'Nodes')),
-          h('div',{className:'mstat'},h('b',{},m.edges),h('span',{},'Edges'))),
-        h('div',{className:'modal-order'},
-          h('div',{className:'order-h'},ok?'Execution order':'Issue'),
-          ok?h('div',{className:'order-list'},m.order.map((id,i)=>{const n=this.state.nodes.find(x=>x.id===id);const cat=n?CAT[DEFS[n.type].cat]:'#888';
-            return h('div',{className:'order-row',key:id,style:{animationDelay:(i*45)+'ms'}},
-              h('div',{className:'order-n'},i+1),h('div',{className:'order-id'},id),
-              h('div',{className:'order-cat',style:{'--cat':cat}},n?DEFS[n.type].title:'')); })):
-            h('div',{className:'order-bad'},m.cycles.length?('Nodes in cycle: '+m.cycles.join(' → ')+'. Remove a connecting edge to break the loop.'):'Drag a node onto the canvas, then connect and submit.'))));
+          h('div',{className:'mstat'},h('b',{},m.edges),h('span',{},'Edges')),
+          ok?h('div',{className:'mstat'},h('b',{},m.depth),h('span',{},'Depth')):null),
+        h('div',{className:'modal-body'},
+          (!m.error&&typeKeys.length)?sec('Composition',h('div',{className:'mchips'},typeKeys.map(typeChip))):null,
+          (ok&&((m.entry&&m.entry.length)||(m.terminal&&m.terminal.length)))?
+            sec('Flow',h('div',{className:'flow'},flowCol('Entry',m.entry),h('div',{className:'flow-arrow'},'→'),flowCol('Output',m.terminal))):null,
+          (m.warnings&&m.warnings.length)?
+            sec(m.warnings.length+(m.warnings.length>1?' warnings':' warning'),
+              h('div',{className:'warn-list'},m.warnings.map((w,i)=>h('div',{className:'warn-row',key:i},h('span',{className:'warn-dot'}),w.message)))):null,
+          sec(ok?'Execution order':'Issue',
+            ok?h('div',{className:'order-list'},m.order.map((id,i)=>{const n=this.state.nodes.find(x=>x.id===id);const cat=n?CAT[DEFS[n.type].cat]:'#888';
+              return h('div',{className:'order-row',key:id,style:{animationDelay:(i*45)+'ms'}},
+                h('div',{className:'order-n'},i+1),h('div',{className:'order-id'},id),
+                h('div',{className:'order-cat',style:{'--cat':cat}},n?DEFS[n.type].title:''));})):
+              h('div',{className:'order-bad'},m.error?m.error:(m.cycles.length?('Nodes in cycle: '+m.cycles.join(' → ')+'. Remove a connecting edge to break the loop.'):'Drag a node onto the canvas, then connect and submit.'))))));
   }
   render(){
     const v=this.renderVals();

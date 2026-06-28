@@ -24,13 +24,14 @@ def parse(nodes, edges, status=200):
 # --- correctness -----------------------------------------------------------
 
 def test_empty_pipeline():
-    assert parse([], []) == {
-        "num_nodes": 0,
-        "num_edges": 0,
-        "is_dag": True,
-        "execution_order": [],
-        "cycle_nodes": [],
-    }
+    result = parse([], [])
+    assert result["num_nodes"] == 0
+    assert result["num_edges"] == 0
+    assert result["is_dag"] is True
+    assert result["execution_order"] == []
+    assert result["cycle_nodes"] == []
+    assert result["max_depth"] == 0
+    assert result["warnings"] == []
 
 
 def test_single_node():
@@ -190,3 +191,59 @@ def test_large_linear_chain_is_fast():
     result = parse(nodes, edges)
     assert result["is_dag"] is True
     assert result["num_nodes"] == n
+
+
+# --- structural analysis (new fields) --------------------------------------
+
+def typed(nodes, edges, status=200):
+    """nodes: list of (id, type) tuples."""
+    payload = {
+        "nodes": [{"id": i, "type": t} for i, t in nodes],
+        "edges": [{"source": s, "target": d} for s, d in edges],
+    }
+    r = client.post("/pipelines/parse", json=payload)
+    assert r.status_code == status, r.text
+    return r.json()
+
+
+def test_max_depth_linear_chain():
+    result = parse(["a", "b", "c", "d"], [("a", "b"), ("b", "c"), ("c", "d")])
+    assert result["max_depth"] == 4
+
+
+def test_max_depth_diamond():
+    edges = [("a", "b"), ("a", "c"), ("b", "d"), ("c", "d")]
+    assert parse(["a", "b", "c", "d"], edges)["max_depth"] == 3
+
+
+def test_max_depth_zero_for_cycle():
+    assert parse(["a", "b"], [("a", "b"), ("b", "a")])["max_depth"] == 0
+
+
+def test_entry_terminal_and_isolated_nodes():
+    # a -> b -> c, plus a lone node d
+    result = parse(["a", "b", "c", "d"], [("a", "b"), ("b", "c")])
+    assert result["entry_nodes"] == ["a"]
+    assert result["terminal_nodes"] == ["c"]
+    assert result["isolated_nodes"] == ["d"]
+
+
+def test_node_type_breakdown():
+    result = typed(
+        [("in1", "input"), ("llm1", "llm"), ("llm2", "llm"), ("out1", "output")],
+        [("in1", "llm1"), ("llm1", "llm2"), ("llm2", "out1")],
+    )
+    assert result["node_types"] == {"input": 1, "llm": 2, "output": 1}
+
+
+def test_warns_on_unconnected_output_and_unused_input():
+    result = typed([("in1", "input"), ("out1", "output")], [])
+    messages = {w["node_id"]: w["message"] for w in result["warnings"]}
+    assert "in1" in messages and "never used" in messages["in1"]
+    assert "out1" in messages and "no incoming" in messages["out1"]
+
+
+def test_note_node_is_not_warned_when_isolated():
+    result = typed([("note1", "note")], [])
+    assert result["warnings"] == []
+    assert result["isolated_nodes"] == ["note1"]
